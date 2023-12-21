@@ -1,4 +1,5 @@
 Student Result Management System
+
 Overview
 Welcome to the Student Result Management System, a web application developed using Flask for the backend, PostgreSQL for the database, and Bootstrap for styling. This system enables efficient management and display of student results. Python, with Flask as the web framework, powers the server side, while the client side leverages HTML, CSS, and JavaScript. The PostgreSQL database, managed with pgAdmin, stores and retrieves data seamlessly.
 
