@@ -36,7 +36,7 @@ Clone the Repository:
 
 bash
 Copy code
-git clone https://github.com/your-username/student-result-management.git
+git clone https://github.com/Confytech/StudentManagementSystem.git
 Navigate to the Project Directory:
 
 bash
