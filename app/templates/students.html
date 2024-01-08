@@ -1,0 +1,106 @@
+<!-- students.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management System</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <!-- Include Font Awesome CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .student-icon, .book-icon {
+            font-size: 24px;
+            margin-right: 8px;
+        }
+        h1 {
+            color: #007bff;
+            animation: moveToFro 3s infinite;
+        }
+        table {
+            background-color: #fff;
+        }
+        th, td {
+            text-align: center;
+        }
+        .btn-primary, .btn-secondary, .btn-info, .btn-success, .btn-danger {
+            margin-right: 8px;
+            animation: moveToFroBtn 3s infinite; /* Apply animation to buttons */
+        }
+        .btn i {
+            margin-right: 4px;
+        }
+
+        @keyframes moveToFro {
+            0% {
+                transform: translateX(0);
+            }
+            50% {
+                transform: translateX(20px);
+            }
+            100% {
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes moveToFroBtn {
+            0% {
+                transform: translateX(0);
+            }
+            50% {
+                transform: translateX(20px);
+            }
+            100% {
+                transform: translateX(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-4 mb-4"><i class="fas fa-user-graduate student-icon"></i> Student Management System <i class="fas fa-book book-icon"></i></h1>
+
+        <table class="table table-bordered table-hover">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Age</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in students %}
+                    <tr>
+                        <td>{{ student.name }}</td>
+                        <td>{{ student.age }}</td>
+                        <td>
+                            <a href="{{ url_for('edit_student', student_id=student.id) }}" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i> Edit</a>
+                            <a href="{{ url_for('view_student_grades', student_id=student.id) }}" class="btn btn-info btn-sm"><i class="fas fa-graduation-cap"></i> View Grades</a>
+                            <a href="{{ url_for('add_grade', student_id=student.id) }}" class="btn btn-success btn-sm"><i class="fas fa-plus"></i> Add Grade</a>
+                            <form method="post" action="{{ url_for('delete_student', student_id=student.id) }}" style="display:inline;">
+                                <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i> Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <a href="{{ url_for('add_student') }}" class="btn btn-primary"><i class="fas fa-user-plus"></i> Add Student</a>
+        <a href="{{ url_for('courses') }}" class="btn btn-secondary"><i class="fas fa-book-open"></i> View Courses</a>
+    </div>
+
+    <!-- Include Bootstrap JS and Popper.js -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <!-- Include Font Awesome JS (optional if you need to use icons with JavaScript) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
+</body>
+</html>
