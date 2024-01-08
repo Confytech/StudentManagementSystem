@@ -1,0 +1,89 @@
+<!-- view_grades.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Grades</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 80%;
+            margin: 0 auto;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .actions {
+            text-align: center;
+            margin-top: 10px;
+        }
+        .action-button {
+            padding: 8px 12px;
+            margin-right: 5px;
+            text-decoration: none;
+            color: #fff;
+            border-radius: 4px;
+        }
+        .edit-button {
+            background-color: #007bff;
+        }
+        .delete-button {
+            background-color: #dc3545;
+        }
+        .back-button {
+            background-color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>View Grades</h1>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Student</th>
+                <th>Subject</th>
+                <th>Grade</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for grade in grades %}
+                <tr>
+                    <td>{{ grade.student.name }}</td>
+                    <td>{{ grade.subject }}</td>
+                    <td>{{ grade.grade }}</td>
+                    <td class="actions">
+                        <a href="#" class="action-button edit-button">Edit</a>
+                        <a href="#" class="action-button delete-button">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="actions">
+        <a href="{{ url_for('students') }}" class="action-button back-button">Back to Students</a>
+    </div>
+</body>
+</html>
