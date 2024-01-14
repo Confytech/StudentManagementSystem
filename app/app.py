@@ -1,12 +1,14 @@
 from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
-
 from sqlalchemy import inspect
 from models import Course, Grade, User
 from forms import StudentForm, GradeForm, LoginForm
 from models import db, Student  # Import db and Student from models.py
+from auth import verify_login_credentials
 
+ 
 import secrets
 
 app = Flask(__name__)
@@ -14,6 +16,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:19145569@localhos
 app.config['SECRET_KEY'] = '52087318ea97c1280f2fe2bb4d13327ef85802c2f27f1a1d'
 
 db.init_app(app)
+
 
 # Initialize Flask-Login
 login_manager = LoginManager(app)
@@ -24,33 +27,72 @@ login_manager.login_view = 'login'
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+@app.route('/average_scores')
+def average_scores():
+    # Fetch all students and their grades
+    students = Student.query.all()
 
-# Add this part for Login and Logout
+    # Create a dictionary to store average scores for each student
+    average_scores = {}
+
+    # Calculate the average score for each student
+    for student in students:
+        grades = Grade.query.filter_by(student=student).all()
+        if grades:
+            total_score = sum(int(grade.grade) for grade in grades)
+            average_score = total_score / len(grades)
+            average_scores[student.id] = average_score
+        else:
+            average_scores[student.id] = None
+
+    return render_template('average_scores.html', average_scores=average_scores)
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    # Create an instance of the LoginForm class
-    form = LoginForm()
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
 
-    if form.validate_on_submit():
-        username = form.username.data
-        password = form.password.data
-        user = User.query.filter_by(username=username, password=password).first()
+        # Verify login credentials using the local authentication function
+        user = verify_login_credentials(username, password)
 
         if user:
             login_user(user)
             flash('Login successful!', 'success')
-            return redirect(url_for('students'))
+            return redirect(url_for('dashboard'))
         else:
             flash('Invalid username or password', 'error')
 
-    return render_template('login.html', form=form)
+    return render_template('login.html')
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        # Assuming you have a form with fields 'username' and 'password'
+        username = request.form.get('username')
+        password = request.form.get('password')
+
+        # Your registration logic here, for example, storing user data in a database
+        # This is a simple example, you would likely hash passwords and perform more validation
+        # For demonstration purposes, printing the data to the console
+        print(f"Registered User - Username: {username}, Password: {password}")
+
+        # After registration, you might redirect to a success page
+        return redirect(url_for('registration_success'))
+
+    # If it's a GET request, render the registration form
+    return render_template('register.html')  # Assuming you have an HTML template for the registration form
+
+@app.route('/registration-success')
+def registration_success():
+    return "Registration successful! Thank you for registering."
 
 
 @app.route('/')
 @login_required
 def index():
     # This is just a placeholder. Replace it with your actual home page logic.
-    return render_template('students.html')
+    return render_template('dashboard')
 
 
 @app.route('/logout')
@@ -58,7 +100,7 @@ def index():
 def logout():
     logout_user()
     flash('Logout successful!', 'success')
-    return redirect(url_for('students.html'))
+    return redirect(url_for('login'))
 
 
 # Add this part to check the database

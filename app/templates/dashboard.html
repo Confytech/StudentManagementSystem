@@ -1,0 +1,17 @@
+<!-- templates/dashboard.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+</head>
+<body>
+    <h1>Welcome to the Dashboard, {{ user_data.username }}!</h1>
+    <p>Your role: {{ user_data.role }}</p>
+    <!-- Add more dynamic content as needed -->
+
+    <!-- Example: Display a logout link -->
+    <a href="{{ url_for('logout') }}">Logout</a>
+</body>
+</html>

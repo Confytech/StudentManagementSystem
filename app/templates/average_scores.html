@@ -1,0 +1,28 @@
+<!-- templates/average_scores.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Average Scores</title>
+</head>
+<body>
+    <h1>Average Scores</h1>
+
+    <table>
+        <tr>
+            <th>Student ID</th>
+            <th>Student Name</th>
+            <th>Average Score</th>
+        </tr>
+        {% for student_id, average_score in average_scores.items() %}
+            <tr>
+                <td>{{ student_id }}</td>
+                <td>{{ student_id }}</td>
+                <td>{{ average_score }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

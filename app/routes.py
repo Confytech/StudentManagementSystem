@@ -1,13 +1,62 @@
 # routes.py
-from flask import render_template, request
+from flask import render_template, request, redirect, url_for
+from flask_login import login_user
+from werkzeug.security import generate_password_hash, check_password_hash
 from app import app, db
 from app.models import Student, Grade, Course
 from app.forms import StudentForm, GradeForm
+from app.models import User  # Assuming you have a User model
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+
+        user = User.query.filter_by(username=username).first()
+
+        if user and check_password_hash(user.password_hash, password):
+            login_user(user)
+            flash('Login successful!', 'success')
+            return redirect(url_for('dashboard'))
+        else:
+            flash('Invalid username or password', 'error')
+
+    return render_template('login.html')
+
+@app.route('/average_scores')
+def average_scores():
+    # Fetch all students and their grades
+    students = Student.query.all()
+
+    # Create a dictionary to store average scores for each student
+    average_scores = {}
+
+    # Calculate the average score for each student
+    for student in students:
+        grades = Grade.query.filter_by(student=student).all()
+        if grades:
+            total_score = sum(int(grade.grade) for grade in grades)
+            average_score = total_score / len(grades)
+            average_scores[student.id] = average_score
+        else:
+            average_scores[student.id] = None
+
+    return render_template('average_scores.html', average_scores=average_scores)
+
 
 @app.route('/students', methods=['GET', 'POST'])
 def students():
     students = Student.query.all()
     return render_template('students.html', students=students)
+
+# Modify the dashboard route to pass dynamic data to the template
+@app.route('/dashboard')
+def dashboard():
+    # Assume you have some data to display on the dashboard
+    data = {'username': 'John Doe', 'role': 'Admin'}
+    return render_template('dashboard.html', data=data)
+
 
 @app.route('/students/<int:student_id>/grades', methods=['GET', 'POST'])
 def view_grades(student_id):
